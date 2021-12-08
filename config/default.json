@@ -1,0 +1,5 @@
+{
+    "mongoURI":"mongodb+srv://ToluMals:Malomo%402817@cluster0.p7dyv.mongodb.net/RainyDaysSavers?retryWrites=true&w=majority",
+    "jwtSecret": "rainyDays_myJwtSecret",
+    "emailSecret":"rainyDays_mailerSecret"
+}

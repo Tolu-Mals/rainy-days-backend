@@ -15,8 +15,7 @@ router.get("/:emailToken", (req, res) => {
     .then((user) => {
       user.confirmed = true;
       user.save()
-        .then(() => res
-        .json({ msg: "Account sucessfully confirmed!" }));
+        .then(() => res.redirect('http://localhost:3000/confirm'));
     })
     .catch((err) => res
     .status(400).json({ msg: "Failed to confirm account" }));

@@ -15,14 +15,14 @@ router.post("/", (req, res) => {
 
   if (!email || !password) {
     return res
-      .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+      .setHeader("Access-Control-Allow-Origin", "*")
       .status(400)
       .json({ msg: "Please enter all fields" });
   }
 
   if (!/^(?=.*?[A-Za-z0-9])(?=.*?[#?!@$%^&*-]).{6,}$/gm.test(password)) {
     return res
-      .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+      .setHeader("Access-Control-Allow-Origin", "*")
       .status(400)
       .json({
         msg: "Password must be up to 6 characters and must contain one symbol",
@@ -32,7 +32,7 @@ router.post("/", (req, res) => {
   User.findOne({ email }).then((user) => {
     if (user)
       return res
-        .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+        .setHeader("Access-Control-Allow-Origin", "*")
         .status(400)
         .json({ msg: "User already exists" });
 
@@ -82,7 +82,7 @@ router.post("/", (req, res) => {
                       res
                         .setHeader(
                           "Access-Control-Allow-Origin",
-                          "http://localhost:3000"
+                          "*"
                         )
                         .status(400)
                         .json({ error: error.message });
@@ -90,7 +90,7 @@ router.post("/", (req, res) => {
                     res
                       .setHeader(
                         "Access-Control-Allow-Origin",
-                        "http://localhost:3000"
+                        "*"
                       )
                       .json({ info });
                   }

@@ -16,7 +16,7 @@ router.post("/", (req, res) => {
 
   if (!email || !password) {
     return res
-      .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+      .setHeader("Access-Control-Allow-Origin", "*")
       .status(400)
       .json({ msg: "Please enter all fields" });
   }
@@ -24,19 +24,19 @@ router.post("/", (req, res) => {
   User.findOne({ email }).then((user) => {
     if (!user)
       return res
-        .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+        .setHeader("Access-Control-Allow-Origin", "*")
         .status(400)
         .json({ msg: "User does not exist" });
 
     if (!user.confirmed)
       return res
-        .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+        .setHeader("Access-Control-Allow-Origin", "*")
         .status(400)
         .json({ msg: "Please confirm your email first" });
 
     bcrypt.compare(password, user.password).then((isMatch) => {
       if (!isMatch) return res
-      .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+      .setHeader("Access-Control-Allow-Origin", "*")
       .status(400).json({ msg: "Incorrect password" });
 
       jwt.sign(
@@ -46,7 +46,7 @@ router.post("/", (req, res) => {
         (err, token) => {
           if (err) throw err;
           res
-            .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+            .setHeader("Access-Control-Allow-Origin", "*")
             .json({
               token,
               user: {
@@ -70,7 +70,7 @@ router.get("/user", auth, (req, res) => {
     .select("-password")
     .then((user) =>
       res
-        .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+        .setHeader("Access-Control-Allow-Origin", "*")
         .json(user)
     );
 });

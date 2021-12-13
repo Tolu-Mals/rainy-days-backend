@@ -14,17 +14,27 @@ router.post("/", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ msg: "Please enter all fields" });
+    return res
+      .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+      .status(400)
+      .json({ msg: "Please enter all fields" });
   }
 
   if (!/^(?=.*?[A-Za-z0-9])(?=.*?[#?!@$%^&*-]).{6,}$/gm.test(password)) {
-    return res.status(400).json({
-      msg: "Password must be up to 6 characters and must contain one symbol",
-    });
+    return res
+      .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+      .status(400)
+      .json({
+        msg: "Password must be up to 6 characters and must contain one symbol",
+      });
   }
 
   User.findOne({ email }).then((user) => {
-    if (user) return res.status(400).json({ msg: "User already exists" });
+    if (user)
+      return res
+        .setHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+        .status(400)
+        .json({ msg: "User already exists" });
 
     const newUser = new User({
       email,
@@ -52,31 +62,43 @@ router.post("/", (req, res) => {
                   port: 465,
                   secure: true,
                   auth: {
-                    user: 'noreply@rainydayssavers.com',
-                    pass: '($FVB3]^TkG[',
+                    user: "noreply@rainydayssavers.com",
+                    pass: "($FVB3]^TkG[",
                   },
                 });
 
-                const url = `http://localhost:5000/api/confirmation/${emailToken}`;
+                const url = `https://rainy-days-savers.herokuapp.com/api/confirmation/${emailToken}`;
 
-                transporter
-                  .sendMail({
+                transporter.sendMail(
+                  {
                     from: '"Rainy Days Savers" <noreply@rainydayssavers.com>',
                     to: email,
                     subject: "Confirm Account",
-                    text: 'Click the link to confirm you rainy days account',
-                    html: `Click the link to confirm you rainy days account <br> <a href="${url}">Confirm your account</a>`,
-                  }, (error, info) => {
-                      if(error){
-                        res.status(400).json({error: error.message})
-                      }
-                      res.json({ info })
-                  })
+                    text: "Click the link to confirm your rainy days account",
+                    html: `Click <a href="${url}">here</a> to confirm your account <br> `,
+                  },
+                  (error, info) => {
+                    if (error) {
+                      res
+                        .setHeader(
+                          "Access-Control-Allow-Origin",
+                          "http://localhost:3000"
+                        )
+                        .status(400)
+                        .json({ error: error.message });
+                    }
+                    res
+                      .setHeader(
+                        "Access-Control-Allow-Origin",
+                        "http://localhost:3000"
+                      )
+                      .json({ info });
+                  }
+                );
               }
 
               main().catch(console.error);
             }
-
           );
         });
       });

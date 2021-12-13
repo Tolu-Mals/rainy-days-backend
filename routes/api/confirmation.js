@@ -16,11 +16,9 @@ router.get("/:emailToken", (req, res) => {
       user.confirmed = true;
       user.save()
         .then(() => res
-        .setHeader("Access-Control-Allow-Origin", "*")
         .json({ msg: "Account sucessfully confirmed!" }));
     })
     .catch((err) => res
-    .setHeader("Access-Control-Allow-Origin", "*")
     .status(400).json({ msg: "Failed to confirm account" }));
 });
 

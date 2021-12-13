@@ -14,27 +14,17 @@ router.post("/", (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .setHeader("Access-Control-Allow-Origin", "*")
-      .status(400)
-      .json({ msg: "Please enter all fields" });
+    return res.status(400).json({ msg: "Please enter all fields" });
   }
 
   if (!/^(?=.*?[A-Za-z0-9])(?=.*?[#?!@$%^&*-]).{6,}$/gm.test(password)) {
-    return res
-      .setHeader("Access-Control-Allow-Origin", "*")
-      .status(400)
-      .json({
-        msg: "Password must be up to 6 characters and must contain one symbol",
-      });
+    return res.status(400).json({
+      msg: "Password must be up to 6 characters and must contain one symbol",
+    });
   }
 
   User.findOne({ email }).then((user) => {
-    if (user)
-      return res
-        .setHeader("Access-Control-Allow-Origin", "*")
-        .status(400)
-        .json({ msg: "User already exists" });
+    if (user) return res.status(400).json({ msg: "User already exists" });
 
     const newUser = new User({
       email,
@@ -79,20 +69,9 @@ router.post("/", (req, res) => {
                   },
                   (error, info) => {
                     if (error) {
-                      res
-                        .setHeader(
-                          "Access-Control-Allow-Origin",
-                          "*"
-                        )
-                        .status(400)
-                        .json({ error: error.message });
+                      res.status(400).json({ error: error.message });
                     }
-                    res
-                      .setHeader(
-                        "Access-Control-Allow-Origin",
-                        "*"
-                      )
-                      .json({ info });
+                    res.json({ info });
                   }
                 );
               }

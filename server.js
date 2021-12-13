@@ -1,8 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const config = require('config');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors())
 
 //Middleware for handling form data
 app.use(express.json());

@@ -85,4 +85,61 @@ router.post("/", (req, res) => {
   });
 });
 
+// @route POST api/confirm
+// @desc Confirm user's account
+// @access Public
+router.post("/", (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ msg: "Please enter all fields" });
+  }
+
+  User.findOne({ email }).then((user) => {
+    if (!user) return res.status(400).json({ msg: "Email not yet registered" });
+    jwt.sign(
+      { id: user.id },
+      config.get("emailSecret"),
+      { expiresIn: "7d" },
+      (err, emailToken) => {
+        if (err) throw err;
+
+        async function main() {
+          //Send email to user
+
+          let transporter = nodemailer.createTransport({
+            host: "mail.rainydayssavers.com",
+            port: 465,
+            secure: true,
+            auth: {
+              user: "noreply@rainydayssavers.com",
+              pass: "($FVB3]^TkG[",
+            },
+          });
+
+          const url = `https://rainy-days-savers.herokuapp.com/api/confirmation/${emailToken}`;
+
+          transporter.sendMail(
+            {
+              from: '"Rainy Days Savers" <noreply@rainydayssavers.com>',
+              to: email,
+              subject: "Confirm Account",
+              text: "Click the link to confirm your rainy days account",
+              html: `Click <a href="${url}">here</a> to confirm your account <br> `,
+            },
+            (error, info) => {
+              if (error) {
+                res.status(400).json({ error: error.message });
+              }
+              res.json({ info });
+            }
+          );
+        }
+
+        main().catch(console.error);
+      }
+    );
+  });
+});
+
 module.exports = router;

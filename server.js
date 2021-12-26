@@ -21,6 +21,7 @@ mongoose.connect(db)
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/confirmation', require('./routes/api/confirmation'));
 app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/forgot', require('./routes/api/forgot'));
 
 
 const port = process.env.PORT || 5000;

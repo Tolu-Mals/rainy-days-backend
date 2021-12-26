@@ -85,8 +85,8 @@ router.post("/", (req, res) => {
   });
 });
 
-// @route POST api/confirm
-// @desc Confirm user's account
+// @route POST api/users/confirm
+// @desc Send account confirmation link to user
 // @access Public
 router.post("/", (req, res) => {
   const { email, password } = req.body;

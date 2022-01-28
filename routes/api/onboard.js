@@ -18,32 +18,31 @@ router.post("/user-info", auth, (req, res) => {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
 
-  User.findById(id).then(user => {
-    if (!user) return res.status(400).json({ msg: "User does not exist" });
+  User.findById(id)
+    .then((user) => {
+      if (!user) return res.status(400).json({ msg: "User does not exist" });
 
-    user.first_name = first_name;
-    user.last_name = last_name;
-    user.dob = dob;
-    user.phone_number = phone_number;
-    user
-      .save()
-      .then(() => {
+      user.first_name = first_name;
+      user.last_name = last_name;
+      user.dob = dob;
+      user.phone_number = phone_number;
+      user
+        .save()
+        .then(() => {
           res.json({
-            msg: 'Successfully updated user information',
-            user: {
-                email: user.email,
-                id: user.id,
-                first_name: user.first_name,
-                last_name: user.last_name,
-              }
-          })
-      }).catch(err => {
-        res.json({msg: err.message});
-      })
-      
-}).catch((err) => {
-    res.json({msg: err.message})
-  });
-});;
+            email: user.email,
+            id: user.id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+          });
+        })
+        .catch((err) => {
+          res.json({ msg: err.message });
+        });
+    })
+    .catch((err) => {
+      res.json({ msg: err.message });
+    });
+});
 
 module.exports = router;

@@ -37,8 +37,13 @@ router.post("/", (req, res) => {
             token,
             user: {
               id: user.id,
-              name: user.name,
               email: user.email,
+              first_name: user.first_name,
+              isLastNameSaved: user.last_name ? true : false,
+              isFirstNameSaved: user.first_name ? true : false,
+              isDobSaved: user.dob ? true : false,
+              isBankInfoSaved: user.bank_information ? true : false,
+              isTransactionPinSet: user.transaction_pin ? true : false,
             },
           });
         }
@@ -54,7 +59,18 @@ router.post("/", (req, res) => {
 router.get("/user", auth, (req, res) => {
   User.findById(req.user.id)
     .select("-password")
-    .then((user) => res.json(user));
+    .then((user) =>
+      res.json({
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        isLastNameSaved: user.last_name ? true : false,
+        isFirstNameSaved: user.first_name ? true : false,
+        isDobSaved: user.dob ? true : false,
+        isBankInfoSaved: user.bank_information ? true : false,
+        isTransactionPinSet: user.transaction_pin ? true : false,
+      })
+    );
 });
 
 module.exports = router;

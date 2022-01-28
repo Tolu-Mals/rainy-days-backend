@@ -30,10 +30,14 @@ router.post("/user-info", auth, (req, res) => {
         .save()
         .then(() => {
           res.json({
-            email: user.email,
             id: user.id,
+            email: user.email,
             first_name: user.first_name,
-            last_name: user.last_name,
+            isLastNameSaved: user.last_name ? true : false,
+            isFirstNameSaved: user.first_name ? true : false,
+            isDobSaved: user.dob ? true : false,
+            isBankInfoSaved: user.bank_information ? true : false,
+            isTransactionPinSet: user.transaction_pin ? true : false,
           });
         })
         .catch((err) => {

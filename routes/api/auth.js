@@ -52,7 +52,7 @@ router.post("/", (req, res) => {
   });
 });
 
-//@route GET api/auth/user
+//@route GET api/auth/userk
 //@desc get user's data
 //@access private
 

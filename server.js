@@ -23,6 +23,7 @@ app.use('/api/confirmation', require('./routes/api/confirmation'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/forgot', require('./routes/api/forgot'));
 app.use('/api/onboard', require('./routes/api/onboard'));
+api.use('api/paystack-events', require('./routes/api/paystack-events'));
 
 
 const port = process.env.PORT || 5000;

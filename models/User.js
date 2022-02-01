@@ -17,6 +17,17 @@ const BankInformationSchema = new Schema({
     }
 });
 
+const NotificationSchema = new Schema({
+    date_received: {
+        type: Date,
+        default: Date.now
+    },
+    message: {
+        type: String,
+        required: false
+    }
+})
+
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -44,6 +55,7 @@ const UserSchema = new Schema({
         required: false
     },
     bank_information: BankInformationSchema,
+    notifications: [NotificationSchema],
     transaction_pin: {
         type: Number,
         required: false

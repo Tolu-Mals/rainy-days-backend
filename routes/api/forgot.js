@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
-const config = require('config');
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 
@@ -24,7 +23,7 @@ router.post('/', (req, res) => {
         if (!user.confirmed)
           return res.status(400).json({ msg: "Please confirm your email first" });
         
-        const secret = config.get('jwtSecret') + user.password;
+        const secret = process.env.jwtSecret + user.password;
 
         jwt.sign(
             { id: user.id },
@@ -90,7 +89,7 @@ router.post("/reset/:id/:token", (req, res) => {
         if(!user) res.status(400).json({ msg: "User with email does not exist"})
 
         try {
-            const decoded = jwt.verify(token, config.get("jwtSecret") + user.password );
+            const decoded = jwt.verify(token, process.env.jwtSecret + user.password );
             bcrypt.genSalt(10, (err, salt) => {
                 if (err) throw err;
                 bcrypt.hash(password, salt, (err, hash) => {

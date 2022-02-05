@@ -1,22 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const BankInformationSchema = new Schema({
-    account_number: {
-        type: Number,
-        required: false,
-        unique: true
-    },
-    account_name: {
-        type: String,
-        required: false
-    },
-    bvn: {
-        type: Number,
-        required: false
-    }
-});
-
 const NotificationSchema = new Schema({
     date_received: {
         type: Date,
@@ -38,32 +22,7 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    first_name: {
-        type: String,
-        required: false
-    },
-    last_name: {
-        type: String,
-        required: false
-    },
-    dob: {
-        type: Date,
-        required: false
-    },
-    phone_number: {
-        type: String,
-        required: false
-    },
-    bank_information: BankInformationSchema,
     notifications: [NotificationSchema],
-    transaction_pin: {
-        type: Number,
-        required: false
-    },
-    confirmed: {
-        type: Boolean,
-        default: false
-    },
     register_date: {
         type: Date,
         default: Date.now

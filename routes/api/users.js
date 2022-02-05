@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-const config = require("config");
 const jwt = require("jsonwebtoken");
 
 const User = require("../../models/User");
@@ -39,7 +38,7 @@ router.post("/", (req, res) => {
         newUser.save().then(async (user) => {
           jwt.sign(
             { id: user.id },
-            config.get("emailSecret"),
+            process.env.emailSecret,
             { expiresIn: "7d" },
             (err, emailToken) => {
               if (err) throw err;
@@ -99,7 +98,7 @@ router.post("/", (req, res) => {
     if (!user) return res.status(400).json({ msg: "Email not yet registered" });
     jwt.sign(
       { id: user.id },
-      config.get("emailSecret"),
+      process.env.emailSecret,
       { expiresIn: "7d" },
       (err, emailToken) => {
         if (err) throw err;

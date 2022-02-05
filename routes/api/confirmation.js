@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
-const config = require('config');
 
 // @route GET api/confirmation/:token
 // @desc Confirm a user's account and redirect to account confirmed page
@@ -10,7 +9,7 @@ const config = require('config');
 router.get("/:emailToken", (req, res) => {
   const emailToken = req.params.emailToken;
 
-  const { id } = jwt.verify(emailToken, config.get("emailSecret"));
+  const { id } = jwt.verify(emailToken, process.env.emailSecret);
   User.findById(id)
     .then((user) => {
       user.confirmed = true;

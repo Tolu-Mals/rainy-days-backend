@@ -1,13 +1,12 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
 
-require('dotenv').config()
+require("dotenv").config();
 
-
-app.use(cors())
+app.use(cors());
 
 //Middleware for handling form data
 app.use(express.json());
@@ -15,18 +14,17 @@ app.use(express.json());
 //DB Configuration
 const db = process.env.mongoURI;
 
-mongoose.connect(db)
-    .then(() => console.log('MongoDB Connected...'))
-    .catch(err => console.log(err));
+mongoose
+  .connect(db)
+  .then(() => console.log("MongoDB Connected..."))
+  .catch((err) => console.log(err));
 
-
-app.use('/api/users', require('./routes/api/users'));
-app.use('/api/confirmation', require('./routes/api/confirmation'));
-app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/forgot', require('./routes/api/forgot'));
-app.use('/api/onboard', require('./routes/api/onboard'));
-app.use('/api/paystack-events', require('./routes/api/paystack-events'));
-
+app.use("/api/users", require("./routes/api/users"));
+app.use("/api/confirmation", require("./routes/api/confirmation"));
+app.use("/api/auth", require("./routes/api/auth"));
+app.use("/api/forgot", require("./routes/api/forgot"));
+app.use("/api/onboard", require("./routes/api/onboard"));
+app.use("/api/paystack-events", require("./routes/api/paystack-events"));
 
 const port = process.env.PORT || 5000;
 

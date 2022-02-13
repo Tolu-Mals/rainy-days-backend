@@ -1,10 +1,25 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
 
 const User = require("../../models/User");
+
+const { google } = require("googleapis");
+
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = "https://developers.google.com/oauthplayground";
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
+
+const oAuth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URI
+);
+
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 // @route POST api/users
 // @desc Register a new user
@@ -43,39 +58,47 @@ router.post("/", (req, res) => {
             (err, emailToken) => {
               if (err) throw err;
 
+              const url = `https://rainy-days-savers.herokuapp.com/api/confirmation/${emailToken}`;
+
               async function main() {
                 //Send email to user
+                const acessToken = await oAuth2Client.getAccessToken();
 
                 let transporter = nodemailer.createTransport({
-                  host: "mail.rainydayssavers.com",
-                  port: 465,
-                  secure: true,
+                  service: "gmail",
                   auth: {
-                    user: "noreply@rainydayssavers.com",
-                    pass: "($FVB3]^TkG[",
+                    type: "OAuth2",
+                    user: "rainydayssaversweb@gmail.com",
+                    clientId: CLIENT_ID,
+                    clientSecret: CLIENT_SECRET,
+                    refreshToken: REFRESH_TOKEN,
+                    acessToken,
                   },
                 });
 
-                const url = `https://rainy-days-savers.herokuapp.com/api/confirmation/${emailToken}`;
+                const mailOptions = {
+                  from: '"Rainy Days Savers" <rainydayssaversweb@gmail.com>',
+                  to: email,
+                  subject: "Confirm Account",
+                  text: "Click the link to confirm your rainy days account",
+                  html: `Click <a href="${url}">here</a> to confirm your account <br> `,
+                };
 
-                transporter.sendMail(
-                  {
-                    from: '"Rainy Days Savers" <noreply@rainydayssavers.com>',
-                    to: email,
-                    subject: "Confirm Account",
-                    text: "Click the link to confirm your rainy days account",
-                    html: `Click <a href="${url}">here</a> to confirm your account <br> `,
-                  },
-                  (error, info) => {
-                    if (error) {
-                      res.status(400).json({ error: error.message });
-                    }
-                    res.json({ info });
+                transporter.sendMail(mailOptions, (error, info) => {
+                  
+                  if (error) {
+                    console.log(error.message)
+                    res.status(400).json({ msg: error.message });
                   }
-                );
+                  console.log(info);
+                  res.json({ info });
+                });
               }
 
-              main().catch(console.error);
+              main().catch((err) => {
+                console.log(err.message);
+                res.json({ msg: err.message });
+              });
             }
           );
         });
@@ -135,7 +158,9 @@ router.post("/", (req, res) => {
           );
         }
 
-        main().catch(console.error);
+        main().catch((error) => {
+          console.log(error.message)
+        });
       }
     );
   });

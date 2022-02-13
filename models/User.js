@@ -22,6 +22,10 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    confirmed: {
+        type: Boolean,
+        default: false
+    },
     notifications: [NotificationSchema],
     register_date: {
         type: Date,

@@ -14,7 +14,7 @@ router.get("/:emailToken", (req, res) => {
     .then((user) => {
       user.confirmed = true;
       user.save()
-        .then(() => res.redirect('https://www.rainydayssavers.com/confirm'));
+        .then(() => res.redirect('http://localhost:3000/confirm'));
     })
     .catch((err) => res
     .status(400).json({ msg: "Failed to confirm account" }));

@@ -88,7 +88,7 @@ router.post("/", (req, res) => {
                   
                   if (error) {
                     console.log(error.message)
-                    res.status(400).json({ msg: error.message });
+                    res.status(400).json({ msg: error?.message });
                   }
                   console.log(info);
                   res.json({ info });
@@ -96,8 +96,8 @@ router.post("/", (req, res) => {
               }
 
               main().catch((err) => {
-                console.log(err.message);
-                res.json({ msg: err.message });
+                console.log(err?.message);
+                res.json({ msg: err?.message });
               });
             }
           );

@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const auth = require("../../middleware/auth");
+const axios = require("axios");
 
 const User = require("../../models/User");
 
@@ -36,13 +37,7 @@ router.post("/", (req, res) => {
             token,
             user: {
               id: user.id,
-              email: user.email,
-              first_name: user.first_name,
-              isLastNameSaved: user.last_name ? true : false,
-              isFirstNameSaved: user.first_name ? true : false,
-              isDobSaved: user.dob ? true : false,
-              isBankInfoSaved: user.bank_information ? true : false,
-              isTransactionPinSet: user.transaction_pin ? true : false,
+              email: user.email
             },
           });
         }
@@ -51,8 +46,8 @@ router.post("/", (req, res) => {
   });
 });
 
-//@route GET api/auth/userk
-//@desc get user's data
+//@route GET api/auth/user
+//@desc get user's data: id and email
 //@access private
 
 router.get("/user", auth, (req, res) => {
@@ -61,15 +56,35 @@ router.get("/user", auth, (req, res) => {
     .then((user) =>
       res.json({
         id: user.id,
-        email: user.email,
-        first_name: user.first_name,
-        isLastNameSaved: user.last_name ? true : false,
-        isFirstNameSaved: user.first_name ? true : false,
-        isDobSaved: user.dob ? true : false,
-        isBankInfoSaved: user.bank_information ? true : false,
-        isTransactionPinSet: user.transaction_pin ? true : false,
+        email: user.email
       })
     );
 });
+
+
+//@route GET api/auth/customer
+//@desc get user(customer) data: first_name, last_name, phone_number, customer_code using paystack api
+//@access private
+
+router.get("/customer/:email", auth, (req, res) => {
+  const email = req.params.email;
+
+  console.log(email)
+
+  const options = {
+    headers: {
+      Authorization: `Bearer ${process.env.secretKey}`
+    }
+  }
+
+  axios.get(`https://api.paystack.co/customer/${email}`, options)
+  .then((response) => {
+    res.send(response.data.data);
+  })
+  .catch(error => {
+    res.json({ msg: error.message })
+  })
+});
+
 
 module.exports = router;

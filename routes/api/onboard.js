@@ -23,7 +23,7 @@ router.post("/user-info", auth, (req, res) => {
 
   const options = {
     headers: {
-      Authorization: "Bearer sk_test_1b56e9323cc86201f834a407e2e4a385838e83d6",
+      Authorization: `Bearer ${process.env.secretKey}`,
       "Content-Type": "application/json",
     },
   };
@@ -31,19 +31,17 @@ router.post("/user-info", auth, (req, res) => {
   axios
     .post("https://api.paystack.co/customer", body, options)
     .then((response) => {
-      console.log("Sent post request");
       console.log(response.message);
       res.json({
         first_name,
         last_name,
         phone_number,
         customer_code: response.data.data.customer_code,
-        paystack_user_id: response.data.data.id,
       });
     })
     .catch((err) => {
       console.log(err.message);
-      res.end();
+      res.json({ msg: 'An error occurred'})
     });
 });
 
